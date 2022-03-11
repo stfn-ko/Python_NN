@@ -1,2 +1,2 @@
-# auckley_function_ga
-Genetic algorithm for Auckley function implemented in Python 
+# Python_NN
+My very first Neural network implemented in Python 
