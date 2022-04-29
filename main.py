@@ -14,15 +14,15 @@ Loss = []
 EditedOutputArr = np.array([])
 
 class NeuralNetwork(object):
-  #param init
+  #par init
   def __init__(self):
     self.inputSize = 2
     self.outputSize = 1
-    self.hiddenSize = 3
+    self.hiddenSize = 5
     
     #weights
-    self.W1 = np.random.randn(self.inputSize, self.hiddenSize) #(2x3 weight matrix from input to hidden layer)
-    self.W2 = np.random.randn(self.hiddenSize, self.outputSize) #(3x1 weight matrix from hidden layer to output)
+    self.W1 = np.random.randn(self.inputSize, self.hiddenSize) #(2x5 weight matrix from input to hidden layer)
+    self.W2 = np.random.randn(self.hiddenSize, self.outputSize) #(5x1 weight matrix from hidden layer to output)
 
 
   def feedForward(self, X):
@@ -82,7 +82,7 @@ nDF1 = pd.DataFrame(np.c_[X, Y, NN.feedForward(X), EditedOutputArr],
 nDF2 = pd.DataFrame(Loss, columns=['Iteration', 'Loss'])
 nDF2.set_index("Iteration", inplace = True)
 
-with pd.ExcelWriter("training_outputs\H7_SIG\TrIt10-3_HL7_Wt2.xlsx") as writer:
+with pd.ExcelWriter("training_outputs\TrIt10-3_HL5_Wt2.xlsx") as writer:
   nDF1.to_excel(writer, sheet_name="Training Data", index=False)
   nDF2.to_excel(writer, sheet_name="Loss Rate", index=True)
 
