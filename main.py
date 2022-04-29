@@ -18,11 +18,11 @@ class NeuralNetwork(object):
   def __init__(self):
     self.inputSize = 2
     self.outputSize = 1
-    self.hiddenSize = 3
+    self.hiddenSize = 5
     
     #weights
-    self.W1 = np.random.randn(self.inputSize, self.hiddenSize) #(3x2 weight matrix from input to hidden layer)
-    self.W2 = np.random.randn(self.hiddenSize, self.outputSize) #(3x1 weight matrix from hidden layer to output)
+    self.W1 = np.random.randn(self.inputSize, self.hiddenSize) #(2x5 weight matrix from input to hidden layer)
+    self.W2 = np.random.randn(self.hiddenSize, self.outputSize) #(5x1 weight matrix from hidden layer to output)
 
 
   def feedForward(self, X):
@@ -61,8 +61,8 @@ class NeuralNetwork(object):
 
 NN = NeuralNetwork()
 
-for i in range(10000): #trains NN n-times
-  if (i % 100 == 0):
+for i in range(10000000): #trains NN n-times
+  if (i % 100000 == 0):
     Loss.append([i, np.mean(np.square(Y - NN.feedForward(X)))])
   NN.train(X, Y)
 
@@ -82,7 +82,7 @@ nDF1 = pd.DataFrame(np.c_[X, Y, NN.feedForward(X), EditedOutputArr],
 nDF2 = pd.DataFrame(Loss, columns=['Iteration', 'Loss'])
 nDF2.set_index("Iteration", inplace = True)
 
-with pd.ExcelWriter("training_outputs\TrIt10-4_HL1_Wt2.xlsx") as writer:
+with pd.ExcelWriter("training_outputs\TrIt10-7_HL5_Wt2.xlsx") as writer:
   nDF1.to_excel(writer, sheet_name="Training Data", index=False)
   nDF2.to_excel(writer, sheet_name="Loss Rate", index=True)
 
