@@ -18,19 +18,27 @@ class NeuralNetwork(object):
   def __init__(self):
     self.inputSize = 2
     self.outputSize = 1
-    self.hiddenSize = 5
+    self.hiddenSize = 3
     
     #weights
-    self.W1 = np.random.randn(self.inputSize, self.hiddenSize) #(2x5 weight matrix from input to hidden layer)
-    self.W2 = np.random.randn(self.hiddenSize, self.outputSize) #(5x1 weight matrix from hidden layer to output)
+    self.W1 = np.random.randn(self.inputSize, self.hiddenSize) #(2x3 weight matrix from input to hidden layer)
+
+    self.W2 = np.random.randn(self.hiddenSize, self.hiddenSize) #(3x3 weight matrix from hidden layer one to hidden layer two)
+    
+    self.W3 = np.random.randn(self.hiddenSize, self.outputSize) #(3x1 weight matrix from hidden layer to output)
 
 
   def feedForward(self, X):
     #forward propogation
-    self.z = np.dot(X, self.W1) #dot prod of input(X) and first set of weights(W1)
-    self.z2 = self.sigmoid(self.z) #activation func
-    self.z3 = np.dot(self.z2, self.W2) #dot prod of hidden layer (z2) and second set of weights(W2)
+    self.z1 = np.dot(X, self.W1) #dot prod of input(X) and first set of weights(W1)
+    self.a1 = self.sigmoid(self.z1) #activation func
+    
+    self.z2 = np.dot(self.a1, self.W2) #dot prod of the first hidden layer and second set of weights(W2)
+    self.a2 = self.sigmoid(self.z2) #activation func
+    
+    self.z3 = np.dot(self.a2, self.W3) #dot prod of the second hidden layer and third set of weights(W3)
     output = self.sigmoid(self.z3)
+    
     return output    
     
   
@@ -39,11 +47,15 @@ class NeuralNetwork(object):
     self.output_error = Y - output #err in output
     self.output_delta = self.output_error * self.sigmoid(output, deriv=True)
 
-    self.z2_error = self.output_delta.dot(self.W2.T) #z2 err weight on output err
-    self.z2_delta = self.z2_error * self.sigmoid(self.z2, deriv=True) #applying deriv of sigmoid to z2
+    self.a2_error = self.output_delta.dot(self.W3.T) #a2 err weight on output err
+    self.a2_delta = self.a2_error * self.sigmoid(self.a2, deriv=True) #applying deriv of sigmoid to a2
+
+    self.a1_error = self.a2_delta.dot(self.W2.T) #a err weight on a2 err
+    self.a1_delta = self.a1_error * self.sigmoid(self.a1, deriv=True) #applying deriv of sigmoid to a
     
-    self.W1 += X.T.dot(self.z2_delta) #adjust first set of weights(W1)
-    self.W2 += self.z2.T.dot(self.output_delta) #adjust second set of weights(W2)
+    self.W1 += X.T.dot(self.a1_delta) #adjust first set of weights(W1)
+    self.W2 += self.a1.T.dot(self.a2_delta) #adjust second set of weights(W2)
+    self.W3 += self.a2.T.dot(self.output_delta) #adjust third set of weights(W3)
     
     
   def sigmoid(self, s, deriv=False):
@@ -82,7 +94,7 @@ nDF1 = pd.DataFrame(np.c_[X, Y, NN.feedForward(X), EditedOutputArr],
 nDF2 = pd.DataFrame(Loss, columns=['Iteration', 'Loss'])
 nDF2.set_index("Iteration", inplace = True)
 
-with pd.ExcelWriter("training_outputs\TrIt10-3_HL5_Wt2.xlsx") as writer:
+with pd.ExcelWriter("training_outputs\TrIt10-3.xlsx") as writer:
   nDF1.to_excel(writer, sheet_name="Training Data", index=False)
   nDF2.to_excel(writer, sheet_name="Loss Rate", index=True)
 
