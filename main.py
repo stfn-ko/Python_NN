@@ -4,11 +4,11 @@ import pandas as pd
 
 
 df = pd.read_csv('data.csv')
-X = df.iloc[:,:2].to_numpy() # input-1 & input-2
-Y = df.iloc[:,-1:].to_numpy() #answer
+input = df.iloc[:,:2].to_numpy() # input-1 & input-2
+answer = df.iloc[:,-1:].to_numpy() #answer
 
-X = X/np.amax(X, axis=0) #max of x array
-Y = Y*0.5 
+input = input/np.amax(input, axis=0) #max of x array
+answer = answer*0.5 
 
 Loss = []
 EditedOutputArr = np.array([])
@@ -28,9 +28,9 @@ class NeuralNetwork(object):
     self.W3 = np.random.randn(self.hiddenSize, self.outputSize) #(3x1 weight matrix from hidden layer to output)
 
 
-  def feedForward(self, X):
+  def feedForward(self, input):
     #forward propogation
-    self.z1 = np.dot(X, self.W1) #dot prod of input(X) and first set of weights(W1)
+    self.z1 = np.dot(input, self.W1) #dot prod of input(X) and first set of weights(W1)
     self.a1 = self.sigmoid(self.z1) #activation func
     
     self.z2 = np.dot(self.a1, self.W2) #dot prod of the first hidden layer and second set of weights(W2)
@@ -42,9 +42,9 @@ class NeuralNetwork(object):
     return output    
     
   
-  def backward(self, X, Y, output):
+  def backward(self, input, answer, output):
     #back propogation
-    self.output_error = Y - output #err in output
+    self.output_error = answer - output #err in output
     self.output_delta = self.output_error * self.sigmoid(output, deriv=True)
 
     self.a2_error = self.output_delta.dot(self.W3.T) #a2 err weight on output err
@@ -53,7 +53,7 @@ class NeuralNetwork(object):
     self.a1_error = self.a2_delta.dot(self.W2.T) #a err weight on a2 err
     self.a1_delta = self.a1_error * self.sigmoid(self.a1, deriv=True) #applying deriv of sigmoid to a
     
-    self.W1 += X.T.dot(self.a1_delta) #adjust first set of weights(W1)
+    self.W1 += input.T.dot(self.a1_delta) #adjust first set of weights(W1)
     self.W2 += self.a1.T.dot(self.a2_delta) #adjust second set of weights(W2)
     self.W3 += self.a2.T.dot(self.output_delta) #adjust third set of weights(W3)
     
@@ -64,9 +64,9 @@ class NeuralNetwork(object):
     return 1/(1 + np.exp(-s))
   
   
-  def train(self, X, Y):
-    output = self.feedForward(X)
-    self.backward(X, Y, output)
+  def train(self, input, answer):
+    output = self.feedForward(input)
+    self.backward(input, answer, output)
 
 
 
@@ -75,10 +75,14 @@ NN = NeuralNetwork()
 
 for i in range(1000): #trains NN n-times
   if (i % 10 == 0):
-    Loss.append([i, np.mean(np.square(Y - NN.feedForward(X)))])
-  NN.train(X, Y)
+    Loss.append([i, np.mean(np.square(answer - NN.feedForward(input)))])
+  NN.train(input, answer)
 
-for f in NN.feedForward(X): #formats output
+
+
+#Documentation
+
+for f in NN.feedForward(input): #formats output
   if f >= 0.8:
     EditedOutputArr = np.append(EditedOutputArr, 1.0)
   elif f <= 0.1:
@@ -87,7 +91,7 @@ for f in NN.feedForward(X): #formats output
     EditedOutputArr = np.append(EditedOutputArr, 0.5)
     
 
-nDF1 = pd.DataFrame(np.c_[X, Y, NN.feedForward(X), EditedOutputArr], 
+nDF1 = pd.DataFrame(np.c_[input, answer, NN.feedForward(input), EditedOutputArr], 
                    columns=['Input-X', 'Input-Y', 'Expected Output', 
                             'Predicted Output(un-edited)', 'Predicted Output(un-edited)'])
 
