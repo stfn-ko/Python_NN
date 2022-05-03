@@ -14,18 +14,18 @@ Loss = []
 EditedOutputArr = np.array([])
 
 class NeuralNetwork(object):
-  #par init
+  #parameter initialization
   def __init__(self):
     self.inputSize = 2
     self.outputSize = 1
-    self.hiddenSize = 3
+    self.hiddenSize = 3 #amount of neurons in hidden layer
     
     #weights
-    self.W1 = np.random.randn(self.inputSize, self.hiddenSize) #(2x3 weight matrix from input to hidden layer)
-
-    self.W2 = np.random.randn(self.hiddenSize, self.hiddenSize) #(3x3 weight matrix from hidden layer one to hidden layer two)
+    self.W1 = np.random.randn(self.inputSize, self.hiddenSize) #(2x3) weight matrix from input to hidden layer
     
-    self.W3 = np.random.randn(self.hiddenSize, self.outputSize) #(3x1 weight matrix from hidden layer to output)
+    self.W2 = np.random.randn(self.hiddenSize, self.hiddenSize) #(3x3) weight matrix from hidden layer one to hidden layer two
+    
+    self.W3 = np.random.randn(self.hiddenSize, self.outputSize) #(3x1) weight matrix from hidden layer to output
 
 
   def feedForward(self, input):
