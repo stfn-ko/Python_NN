@@ -21,12 +21,15 @@ class NeuralNetwork(object):
     self.hiddenSize = 3
     
     #weights
-    self.W1 = np.random.randn(self.inputSize, self.hiddenSize) #(2x3 weight matrix from input to hidden layer)
-
-    self.W2 = np.random.randn(self.hiddenSize, self.hiddenSize) #(3x3 weight matrix from hidden layer one to hidden layer two)
+    self.W1 = np.random.randn(self.inputSize, self.hiddenSize) #(2x3) weight matrix from input to hidden layer
+    self.b1 = np.zeros(self.hiddenSize) # 1x3 bias for 1st set of weights
     
-    self.W3 = np.random.randn(self.hiddenSize, self.outputSize) #(3x1 weight matrix from hidden layer to output)
-
+    self.W2 = np.random.randn(self.hiddenSize, self.hiddenSize) #(3x3) weight matrix from hidden layer one to hidden layer two
+    self.b2 = np.zeros(self.hiddenSize) # 1x3 bias for 2nd set of weights
+    
+    self.W3 = np.random.randn(self.hiddenSize, self.outputSize) #(3x1) weight matrix from hidden layer to output
+    self.b3 = np.zeros(self.outputSize) # 1x1 bias for 3rd set of weights
+    
 
   def feedForward(self, input):
     #forward propogation
