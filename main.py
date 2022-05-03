@@ -33,13 +33,13 @@ class NeuralNetwork(object):
 
   def feedForward(self, input):
     #forward propogation
-    self.z1 = np.dot(input, self.W1) #dot prod of input(X) and first set of weights(W1)
+    self.z1 = np.dot(input, self.W1) + self.b1 #dot prod of input(X) and first set of weights(W1)
     self.a1 = self.sigmoid(self.z1) #activation func
     
-    self.z2 = np.dot(self.a1, self.W2) #dot prod of the first hidden layer and second set of weights(W2)
+    self.z2 = np.dot(self.a1, self.W2) + self.b2 #dot prod of the first hidden layer and second set of weights(W2)
     self.a2 = self.sigmoid(self.z2) #activation func
     
-    self.z3 = np.dot(self.a2, self.W3) #dot prod of the second hidden layer and third set of weights(W3)
+    self.z3 = np.dot(self.a2, self.W3) + self.b3 #dot prod of the second hidden layer and third set of weights(W3)
     output = self.sigmoid(self.z3)
     
     return output    
@@ -85,7 +85,7 @@ for i in range(1000): #trains NN n-times
 
 #Documentation
 
-for f in NN.feedForward(input): #formats output
+for f in NN.feedForward(input): #interprets output
   if f >= 0.8:
     EditedOutputArr = np.append(EditedOutputArr, 1.0)
   elif f <= 0.1:
