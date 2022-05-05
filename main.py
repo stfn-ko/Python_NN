@@ -17,7 +17,7 @@ class NeuralNetwork(object):
   def __init__(self):
     self.inputSize = 2
     self.outputSize = 1
-    self.hiddenSize = 3
+    self.hiddenSize = 5
     
     #weights
     self.W1 = np.random.randn(self.inputSize, self.hiddenSize) #(2x3) weight matrix from input to hidden layer
