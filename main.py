@@ -98,7 +98,7 @@ nDF1 = pd.DataFrame(np.c_[input, answer, NN.feedForward(input), EditedOutputArr]
 nDF2 = pd.DataFrame(Loss, columns=['Iteration', 'Loss'])
 nDF2.set_index("Iteration", inplace = True)
 
-with pd.ExcelWriter("training_outputs\TrIt10-3.xlsx") as writer:
+with pd.ExcelWriter("training_outputs\TrIt_-_.xlsx") as writer:
   nDF1.to_excel(writer, sheet_name="Training Data", index=False)
   nDF2.to_excel(writer, sheet_name="Loss Rate", index=True)
 
